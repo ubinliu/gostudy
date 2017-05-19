@@ -1,0 +1,36 @@
+#!/bin/bash
+
+PROC_NAME="study"
+
+function start(){
+    rm -rf ./mem.prof
+    rm -rf ./cpu.prof
+    pid=`ps uax|grep $PROC_NAME|grep -v grep |awk '{print $2}'`
+    kill -s USR1 $pid
+}
+
+function stop(){
+    pid=`ps uax|grep $PROC_NAME|grep -v grep |awk '{print $2}'`
+    kill -s USR2 $pid
+}
+
+function usage(){
+    echo "./pprof [start|stop]"
+}
+
+if [ $# != 1 ];then
+    usage
+    exit
+fi
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    *)
+        usage
+        ;;
+esac
